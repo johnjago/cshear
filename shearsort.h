@@ -4,4 +4,3 @@
 void shearsort(void *arg);
 
 #endif
-

@@ -48,4 +48,3 @@ void insert_col(int arr[][4], int col, int* buf)
     arr[i][col] = buf[i];
   }
 }
-

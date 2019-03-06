@@ -6,4 +6,3 @@
 #define N n*n
 
 #endif
-
