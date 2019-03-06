@@ -8,49 +8,30 @@
 #include "swap.h"
 #include "array_utils.h"
 #include "shared.h"
+#include "bubble.h"
 
 void shearsort(void *arg)
 {
   int index = *((int *) arg);
   free(arg);
-  int *arr;
   int col[n];
   int phase;
 
   for (phase = 1; phase <= log2(N) + 1; phase++) {
     if (phase % 2 != 0) {
-      // row sort
-      arr = mesh[index];
-      int i, j;
-      for (i = 0; i < n - 1; i++) {
-        for(j = 0; j < n - i - 1; j++) {
-          if (arr[j] > arr[j + 1]) {
-            swap(&arr[j], &arr[j + 1]);
-          }
-        }
-      }
+      // sort the rows since it's an odd phase
+      bubble_sort(&mesh[index]);
       if (index % 2 != 0) {
         reverse(mesh[index], n);
       }
     } else {
-      // column sort
+      // sort the columns since it's an even phase
       extract_col(mesh, index, col);
-      int i, j;
-      for (i = 0; i < n - 1; i++) {
-        for(j = 0; j < n - i - 1; j++) {
-          if (col[j] > col[j + 1]) {
-            swap(&col[j], &col[j + 1]);
-          }
-        }
-      }
+      bubble_sort(&col);
       insert_col(mesh, index, col);
     }
-
     pthread_mutex_lock(&mutex);
     num_complete++;
-   // printf("Phase: %d\nindex: %d\nIt looks like:\n", phase, index);
-   // print_2d_array(mesh, n, n);
-   // printf("Num complete: %d\n\n", num_complete);
     if (num_complete != n) {
       pthread_cond_wait(&cond[index], &mutex);
     } else {
@@ -66,4 +47,3 @@ void shearsort(void *arg)
   }
   pthread_exit(0);
 }
-

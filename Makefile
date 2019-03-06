@@ -6,7 +6,7 @@ CFLAGS = -Wall -Werror -ggdb -funroll-loops
 LDFLAGS = -lpthread
 
 BIN = cshear
-OBJS = main.o shearsort.o array_utils.o swap.o
+OBJS = main.o shearsort.o array_utils.o bubble.o swap.o
 
 all: $(BIN)
 
@@ -29,4 +29,3 @@ clean:
 clobber: clean
 	@$(ECHO) Removing backup files
 	@$(RM) *~ \#* *pgm
-
