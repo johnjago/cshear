@@ -2,36 +2,80 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include "macros.h"
 #include "array_utils.h"
 #include "shearsort.h"
 #include "shared.h"
 
-int mesh[n][n];
+int n;
+int **mesh;
 int num_complete = 0;
+const char *FILENAME = "input.txt";
 pthread_mutex_t mutex;
-pthread_cond_t cond[n];
+pthread_cond_t *cond;
 
 int main()
 {
   FILE *fp;
-  char buff[255];
+  int buff[1024];
   int i, j;
-  int tmp;
-  pthread_t threads[n];
+  int nrows = 0;
+  int ncols = 0;
+  int count = 0;
+  pthread_t *threads;
 
   fp = fopen(FILENAME, "r");
-  
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++) {
-      fscanf(fp, "%s", buff);
-      sscanf(buff, "%d", &tmp);
-      mesh[i][j] = tmp;
-    }
+  if (fp == NULL) {
+    printf("Error opening file.\n");
+    exit(EXIT_FAILURE);
+  }
+
+  // count the number of rows
+  char line[1024];
+  while(fgets(line, 1024, fp)) {
+    nrows++;
   }
   
+  rewind(fp);
+ 
+  // if the number of integers in any row is not equal to the number
+  // of rows, we cannot continue
+  while(fgets(line, 1024, fp)) {
+    ncols = 0;
+    int offset;
+    char *lineptr = &line[0];
+    while (sscanf(lineptr, "%d%n", &buff[count], &offset) == 1) {
+      ncols++;
+      count++;
+      lineptr += offset;
+    }
+    if (nrows != ncols) {
+      fprintf(stderr, "Input file does not contain a square array.\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  // we have an n x n matrix
+  n = nrows;
+
+  // allocate space now that we know n
+  mesh = (int **)malloc(n * sizeof(int*));
+  for (i = 0; i < n; i++) {
+    mesh[i] = (int *)malloc(n * sizeof(int));
+  }
+  cond = (pthread_cond_t *)malloc(n * sizeof(pthread_cond_t));
+  threads = (pthread_t *)malloc(n * sizeof(pthread_t));
+
+  // insert the integers into the mesh
+  count = 0;
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      mesh[i][j] = buff[count];
+      count++;
+    }
+  }
+
   printf("Initially:\n\n");
-  print_2d_array(mesh, n, n);
+  print_2d_array((int **)mesh, n, n);
 
   for (i = 0; i < n; i++) {
     int *arg = malloc(sizeof(*arg));

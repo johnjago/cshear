@@ -3,9 +3,9 @@ ECHO = echo
 RM = rm -f
 
 CFLAGS = -Wall -Werror -ggdb -funroll-loops
-LDFLAGS = -lpthread
+LDFLAGS = -lpthread -lm
 
-BIN = cshear
+BIN = cshear.out
 OBJS = main.o shearsort.o array_utils.o bubble.o swap.o
 
 all: $(BIN)

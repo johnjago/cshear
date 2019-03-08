@@ -3,13 +3,14 @@
 
 #include <stdio.h>
 
-#include "macros.h"
 #include "array_utils.h"
 #include "swap.h"
+#include "shared.h"
 
-/* reverse(): reverse an array
- * @param arr[]
- * @param size:
+/* Reverses an array in place.
+ *
+ * @param arr[]: the array to be reversed
+ * @param size: the length of the array
  */
 void reverse(int arr[], int size)
 {
@@ -22,7 +23,13 @@ void reverse(int arr[], int size)
   }
 }
 
-void print_2d_array(int arr[][4], int num_rows, int num_cols)
+/* Prints a two dimensional array to standard output.
+ *
+ * @param arr[][n]: the array to be printed
+ * @param num_rows: the number of rows in the array
+ * @param num_cols: the number of columns in the array
+ */
+void print_2d_array(int **arr, int num_rows, int num_cols)
 {
   int i, j;
   for (i = 0; i < num_rows; i++) {
@@ -33,7 +40,13 @@ void print_2d_array(int arr[][4], int num_rows, int num_cols)
   }
 }
 
-void extract_col(int arr[][4], int col, int* buf)
+/* Takes the column at index col and copies it into buf.
+ *
+ * @param arr[][n]: the array from which a column will be copied
+ * @param col: the column to copy
+ * @param buf: the location to store the column
+ */
+void extract_col(int **arr, int col, int* buf)
 {
   int i;
   for (i = 0; i < n; i++) {
@@ -41,7 +54,14 @@ void extract_col(int arr[][4], int col, int* buf)
   }
 }
 
-void insert_col(int arr[][4], int col, int* buf)
+/* Inserts the array in buf as a column in the two dimensional array
+ * at index col.
+ *
+ * @param arr[][n]: the array to insert the column into
+ * @param col: the index where the insertion should occur
+ * @param buf: the buffer that contains the elements to be inserted
+ */
+void insert_col(int **arr, int col, int* buf)
 {
   int i;
   for (i = 0; i < n; i++) {
