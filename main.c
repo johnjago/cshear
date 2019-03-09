@@ -1,10 +1,11 @@
+/* main.c: read input and create threads to perform shearsort */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-
-#include "array_utils.h"
-#include "shearsort.h"
 #include "shared.h"
+#include "shearsort.h"
+#include "array_utils.h"
 
 int n;
 int **mesh;
@@ -29,7 +30,7 @@ int main()
     exit(EXIT_FAILURE);
   }
 
-  // count the number of rows
+  /* count the number of rows */
   char line[1024];
   while(fgets(line, 1024, fp)) {
     nrows++;
@@ -37,8 +38,9 @@ int main()
   
   rewind(fp);
  
-  // if the number of integers in any row is not equal to the number
-  // of rows, we cannot continue
+  /* If the number of integers in any row is not equal to the number
+   * of rows, we cannot continue.
+   */
   while(fgets(line, 1024, fp)) {
     ncols = 0;
     int offset;
@@ -54,10 +56,10 @@ int main()
     }
   }
 
-  // we have an n x n matrix
+  /* we have an n x n matrix */
   n = nrows;
 
-  // allocate space now that we know n
+  /* allocate space now that we know n */
   mesh = (int **)malloc(n * sizeof(int*));
   for (i = 0; i < n; i++) {
     mesh[i] = (int *)malloc(n * sizeof(int));
@@ -65,7 +67,7 @@ int main()
   cond = (pthread_cond_t *)malloc(n * sizeof(pthread_cond_t));
   threads = (pthread_t *)malloc(n * sizeof(pthread_t));
 
-  // insert the integers into the mesh
+  /* insert the integers into the mesh */
   count = 0;
   for (i = 0; i < n; i++) {
     for (j = 0; j < n; j++) {

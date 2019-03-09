@@ -1,0 +1,26 @@
+cshear: concurrent shearsort with pthreads
+
+Build
+-----
+To build the program:
+
+  $ make
+
+To clear the directory of generated files:
+
+  $ make clean
+
+Run
+---
+There should be a file called input.txt in the root directory that contains
+the matrix to be sorted.
+
+  $ ./cshear.out
+
+Bugs
+----
+- Output may not be formatted well for integers longer than 3 digits.
+
+License
+-------
+The Unlicense

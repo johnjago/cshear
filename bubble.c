@@ -1,7 +1,13 @@
-#include "shared.h"
+/* bubble.c: a function to perform bubble sort */
+
 #include "bubble.h"
+#include "shared.h"
 #include "swap.h"
 
+/* Performs an in place bubble sort on an array.
+ *
+ * @param *array: the array to be sorted
+ */
 void bubble_sort(void *array)
 {
   int *arr = array;
